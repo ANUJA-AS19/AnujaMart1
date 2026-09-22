@@ -1,0 +1,15 @@
+{
+  "name": "anujamart",
+  "version": "0.1.0",
+  "description": "Native C++20 marketplace backend",
+  "dependencies": [
+    "drogon",
+    "nlohmann-json",
+    "libsodium",
+    "spdlog",
+    "gtest",
+    "cpp-httplib",
+    "sqlite3",
+    "libpqxx"
+  ]
+}

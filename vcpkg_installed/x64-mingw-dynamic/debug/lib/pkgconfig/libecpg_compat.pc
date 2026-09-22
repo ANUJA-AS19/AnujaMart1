@@ -1,0 +1,13 @@
+prefix=${pcfiledir}/../..
+includedir=${prefix}/../include
+libdir=${prefix}/lib
+
+Name: libecpg_compat
+Description: PostgreSQL libecpg_compat library
+URL: https://www.postgresql.org/
+Version: 18.4
+Requires.private: zlib, liblz4, openssl, libecpg, libpgtypes
+Libs: "-L${libdir}" -lecpg_compat
+Libs.private: -pthread -lws2_32 -lm "-L${libdir}" -lpgport_shlib -lpgcommon_shlib
+Cflags: "-I${includedir}"
+

@@ -1,0 +1,19 @@
+[1/6] Building CXX object CMakeFiles/anujamart.dir/src/repository/UserRepository.cpp.obj
+[2/6] Building CXX object CMakeFiles/anujamart.dir/src/controller/ProductController.cpp.obj
+[3/6] Building CXX object CMakeFiles/anujamart.dir/src/controller/ProductBrowseController.cpp.obj
+[4/6] Building CXX object CMakeFiles/anujamart.dir/src/controller/CartController.cpp.obj
+[5/6] Building CXX object CMakeFiles/anujamart.dir/src/controller/OrderController.cpp.obj
+[6/6] Linking CXX executable anujamart.exe
+C:\AnujaMart\build\vcpkg_installed\x64-mingw-dynamic\bin\libdrogon.dll -> C:\AnujaMart\build\libdrogon.dll done
+C:\AnujaMart\build\vcpkg_installed\x64-mingw-dynamic\bin\libbrotlidec.dll -> C:\AnujaMart\build\libbrotlidec.dll done
+C:\AnujaMart\build\vcpkg_installed\x64-mingw-dynamic\bin\libbrotlicommon.dll -> C:\AnujaMart\build\libbrotlicommon.dll done
+C:\AnujaMart\build\vcpkg_installed\x64-mingw-dynamic\bin\libbrotlienc.dll -> C:\AnujaMart\build\libbrotlienc.dll done
+C:\AnujaMart\build\vcpkg_installed\x64-mingw-dynamic\bin\libjsoncpp.dll -> C:\AnujaMart\build\libjsoncpp.dll done
+C:\AnujaMart\build\vcpkg_installed\x64-mingw-dynamic\bin\libtrantor.dll -> C:\AnujaMart\build\libtrantor.dll done
+C:\AnujaMart\build\vcpkg_installed\x64-mingw-dynamic\bin\libcares.dll -> C:\AnujaMart\build\libcares.dll done
+C:\AnujaMart\build\vcpkg_installed\x64-mingw-dynamic\bin\libcrypto-3-x64.dll -> C:\AnujaMart\build\libcrypto-3-x64.dll done
+C:\AnujaMart\build\vcpkg_installed\x64-mingw-dynamic\bin\libssl-3-x64.dll -> C:\AnujaMart\build\libssl-3-x64.dll done
+C:\AnujaMart\build\vcpkg_installed\x64-mingw-dynamic\bin\libz.dll -> C:\AnujaMart\build\libz.dll done
+C:\AnujaMart\build\vcpkg_installed\x64-mingw-dynamic\bin\libpqxx.dll -> C:\AnujaMart\build\libpqxx.dll done
+C:\AnujaMart\build\vcpkg_installed\x64-mingw-dynamic\bin\libpq.dll -> C:\AnujaMart\build\libpq.dll done
+C:\AnujaMart\build\vcpkg_installed\x64-mingw-dynamic\bin\libsodium-26.dll -> C:\AnujaMart\build\libsodium-26.dll done

@@ -1,0 +1,73 @@
+#pragma once
+
+#include "../repository/CartRepository.h"
+#include "../repository/OrderRepository.h"
+#include "../repository/ProductRepository.h"
+#include "../repository/UserRepository.h"
+#include "../repository/UserRepository.h"
+#include "../service/OrderService.h"
+
+#include <drogon/HttpController.h>
+
+namespace anuja::anujamart
+{
+class OrderController
+    : public drogon::HttpController<OrderController>
+{
+public:
+    METHOD_LIST_BEGIN
+
+    ADD_METHOD_TO(
+        OrderController::checkout,
+        "/api/v1/orders/checkout",
+        drogon::Post, "anuja::anujamart::AuthFilter");
+
+    ADD_METHOD_TO(
+        OrderController::getBuyerOrders,
+        "/api/v1/orders",
+        drogon::Get, "anuja::anujamart::AuthFilter");
+
+    ADD_METHOD_TO(
+        OrderController::getSellerOrders,
+        "/api/v1/seller/orders",
+        drogon::Get, "anuja::anujamart::AuthFilter");
+
+    ADD_METHOD_TO(
+        OrderController::updateSellerOrderStatus,
+        "/api/v1/seller/orders/status",
+        drogon::Put, "anuja::anujamart::AuthFilter");
+
+    METHOD_LIST_END
+
+    void checkout(
+        const drogon::HttpRequestPtr& request,
+        std::function<void(
+            const drogon::HttpResponsePtr&)>&& callback);
+
+    void getBuyerOrders(
+        const drogon::HttpRequestPtr& request,
+        std::function<void(
+            const drogon::HttpResponsePtr&)>&& callback);
+
+    void getSellerOrders(
+        const drogon::HttpRequestPtr& request,
+        std::function<void(
+            const drogon::HttpResponsePtr&)>&& callback);
+
+    void updateSellerOrderStatus(
+        const drogon::HttpRequestPtr& request,
+        std::function<void(
+            const drogon::HttpResponsePtr&)>&& callback);
+
+private:
+    OrderRepository orderRepository_;
+    CartRepository cartRepository_;
+    ProductRepository productRepository_;
+    UserRepository userRepository_;
+
+    OrderService orderService_{
+        orderRepository_,
+        cartRepository_,
+        productRepository_};
+};
+}
