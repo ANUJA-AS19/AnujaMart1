@@ -1,2 +1,14 @@
 build/
-backups/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+vcpkg_installed/
+*.exe
+*.dll
+*.obj
+*.o
+*.log
+*.db
+frontend/node_modules/
+frontend/dist/
+.vs/
