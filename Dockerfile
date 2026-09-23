@@ -16,7 +16,7 @@ COPY vcpkg.json .
 RUN mkdir -p /opt/triplets && \
     cp /opt/vcpkg/triplets/x64-linux.cmake /opt/triplets/x64-linux-release.cmake && \
     echo "set(VCPKG_BUILD_TYPE release)" >> /opt/triplets/x64-linux-release.cmake
-RUN /opt/vcpkg/vcpkg install --triplet x64-linux-release --overlay-triplets=/opt/triplets || (find /opt/vcpkg/buildtrees/libsodium -iname "*-out.log" -exec cat {} \; || true; exit 1)
+RUN /opt/vcpkg/vcpkg install --triplet x64-linux-release --overlay-triplets=/opt/triplets || (find /opt/vcpkg/buildtrees/libsodium -iname "*.log" -exec echo "----{}----" \; -exec cat {} \; || true; exit 1)
 
 COPY . .
 RUN cmake -S . -B build \
