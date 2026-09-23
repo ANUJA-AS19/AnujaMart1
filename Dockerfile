@@ -4,7 +4,7 @@ ENV VCPKG_MAX_CONCURRENCY=1
 ENV CMAKE_BUILD_PARALLEL_LEVEL=1
 
 RUN apt-get update && apt-get install -y \
-    build-essential cmake ninja-build git curl zip unzip tar pkg-config python3 \
+    build-essential cmake ninja-build git curl zip unzip tar pkg-config python3 bison \
     autoconf automake libtool \
     && rm -rf /var/lib/apt/lists/*
 
