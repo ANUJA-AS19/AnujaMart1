@@ -1,5 +1,7 @@
 FROM ubuntu:22.04 AS build
 ENV DEBIAN_FRONTEND=noninteractive
+ENV VCPKG_MAX_CONCURRENCY=1
+ENV CMAKE_BUILD_PARALLEL_LEVEL=1
 
 RUN apt-get update && apt-get install -y \
     build-essential cmake ninja-build git curl zip unzip tar pkg-config \
