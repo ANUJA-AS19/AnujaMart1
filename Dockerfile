@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 AS build
+FROM ubuntu:24.04 AS build
 ENV DEBIAN_FRONTEND=noninteractive
 ENV VCPKG_MAX_CONCURRENCY=1
 ENV CMAKE_BUILD_PARALLEL_LEVEL=1
@@ -28,7 +28,7 @@ RUN cmake -S . -B build \
     -DCMAKE_BUILD_TYPE=Release -G Ninja
 RUN cmake --build build --target anujamart
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y ca-certificates libssl3 && rm -rf /var/lib/apt/lists/*
 
