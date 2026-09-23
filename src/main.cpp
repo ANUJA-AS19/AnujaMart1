@@ -100,15 +100,18 @@ int main()
             callback(response);
         });
 
+    // Render (and most cloud hosts) assign the port to listen on
+    // via the PORT environment variable, and require listening on
+    // 0.0.0.0 rather than 127.0.0.1 so it's reachable externally.
     int port = 8080;
-if (const char* portEnv = std::getenv("PORT"))
-{
-    port = std::atoi(portEnv);
-}
+    if (const char* portEnv = std::getenv("PORT"))
+    {
+        port = std::atoi(portEnv);
+    }
 
-drogon::app()
-    .addListener("0.0.0.0", port)
-    .run();
+    drogon::app()
+        .addListener("0.0.0.0", port)
+        .run();
 
     anuja::anujamart::Database::instance().close();
 
