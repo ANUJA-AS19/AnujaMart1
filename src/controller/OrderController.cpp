@@ -30,7 +30,7 @@ void OrderController::checkout(
     {
         Json::Value data;
 
-        data["order_id"] = orderId;
+        data["order_id"] = orderId);
         data["total_amount_cents"] =
             totalAmountCents;
         data["payment_status"] = "PAID";
@@ -198,8 +198,8 @@ void OrderController::updateSellerOrderStatus(
         responseJson["data"]["message"] =
             "Order status updated successfully";
 
-        responseJson["data"]["order_id"] =
-            orderId;
+        responseJson["data"]["order_id"] = Json::Int64(
+            orderId);
 
         responseJson["data"]["status"] =
             status;
