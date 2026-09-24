@@ -233,6 +233,9 @@ function toWireProduct(i, sellerId) {
 export const api = {
   health: () => request('GET', EP.health),
 
+  // --- chatbot
+  chatbot: (message) => request('POST', EP.chatbot, { message }),
+
   // --- auth
   async me() {
     const d = await request('GET', EP.me);

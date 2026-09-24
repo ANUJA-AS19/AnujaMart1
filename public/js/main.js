@@ -188,6 +188,91 @@ function renderHeader(currentPath) {
       el('nav', { class: 'nav', 'aria-label': 'Main' }, links, el('span', { class: 'nav-account' }, account))),
   );
   if (u?.role === 'BUYER') refreshCartCount();
+  renderChatbot();
+}
+
+function renderChatbot() {
+  if (document.getElementById('chatbot-widget')) return;
+
+  const messages = el('div', { class: 'chatbot-messages', 'aria-live': 'polite' });
+  const input = el('input', {
+    class: 'chatbot-input',
+    type: 'text',
+    placeholder: 'Ask about products, cart, orders...',
+    autocomplete: 'off',
+  });
+  const sendButton = el('button', {
+    class: 'chatbot-send',
+    type: 'button',
+  }, 'Send');
+
+  const panel = el('div', { class: 'chatbot-panel', hidden: true },
+    el('div', { class: 'chatbot-title' }, 'AnujaMart Assistant'),
+    messages,
+    el('div', { class: 'chatbot-form' }, input, sendButton),
+  );
+
+  const toggle = el('button', {
+    class: 'chatbot-toggle',
+    type: 'button',
+    'aria-label': 'Open AnujaMart Assistant',
+  }, 'Chat');
+
+  const widget = el('div', {
+    id: 'chatbot-widget',
+    class: 'chatbot-widget',
+  }, panel, toggle);
+
+  const addMessage = (text, type) => {
+    messages.append(
+      el('div', { class: 'chatbot-message ' + type }, text),
+    );
+    messages.scrollTop = messages.scrollHeight;
+  };
+
+  addMessage('Hello! Welcome to AnujaMart. How can I help you today?', 'bot');
+
+  toggle.addEventListener('click', () => {
+    panel.hidden = !panel.hidden;
+    toggle.setAttribute(
+      'aria-label',
+      panel.hidden ? 'Open AnujaMart Assistant' : 'Close AnujaMart Assistant',
+    );
+    if (!panel.hidden) input.focus();
+  });
+
+  const sendMessage = async () => {
+    const message = input.value.trim();
+    if (!message) return;
+
+    addMessage(message, 'user');
+    input.value = '';
+    sendButton.disabled = true;
+
+    try {
+      const result = await api.chatbot(message);
+      addMessage(
+        result?.reply || 'Sorry, I could not understand that question.',
+        'bot',
+      );
+    } catch (error) {
+      addMessage(
+        'Sorry, I could not reach the chatbot server. Please try again.',
+        'bot',
+      );
+    } finally {
+      sendButton.disabled = false;
+      input.focus();
+    }
+  };
+
+  sendButton.addEventListener('click', sendMessage);
+
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') sendMessage();
+  });
+
+  document.body.append(widget);
 }
 
 async function renderFooter() {
