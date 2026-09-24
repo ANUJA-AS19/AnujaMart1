@@ -30,7 +30,7 @@ void OrderController::checkout(
     {
         Json::Value data;
 
-        data["order_id"] = orderId);
+        data["order_id"] = orderId;
         data["total_amount_cents"] =
             totalAmountCents;
         data["payment_status"] = "PAID";
