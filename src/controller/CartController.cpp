@@ -94,6 +94,7 @@ void CartController::getCart(
         {
             itemJson["name"] = product->name;
             itemJson["image_url"] = product->imageUrl;
+            itemJson["price_cents"] = product->priceCents;
         }
 
         itemsJson.append(itemJson);
