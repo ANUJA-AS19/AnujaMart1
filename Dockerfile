@@ -8,7 +8,7 @@ COPY vcpkg.json .
 RUN mkdir -p /opt/triplets && cp /opt/vcpkg/triplets/x64-linux.cmake /opt/triplets/x64-linux-release.cmake && echo "set(VCPKG_BUILD_TYPE release)" >> /opt/triplets/x64-linux-release.cmake
 RUN /opt/vcpkg/vcpkg install --triplet x64-linux-release --overlay-triplets=/opt/triplets
 COPY . .
-RUN cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux-release -DVCPKG_OVERLAY_TRIPLETS=/opt/triplets -DVCPKG_MANIFEST_MODE=OFF -DCMAKE_PREFIX_PATH=/opt/vcpkg/installed/x64-linux-release -DCMAKE_BUILD_TYPE=Release -G Ninja
+RUN cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux-release -DVCPKG_OVERLAY_TRIPLETS=/opt/triplets -DVCPKG_MANIFEST_MODE=OFF -DCMAKE_PREFIX_PATH=/app/vcpkg_installed/x64-linux-release -DCMAKE_BUILD_TYPE=Release -G Ninja
 RUN cmake --build build --target anujamart
 FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
