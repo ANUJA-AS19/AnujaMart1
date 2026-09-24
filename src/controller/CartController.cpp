@@ -89,6 +89,12 @@ void CartController::getCart(
         itemJson["user_id"] = item.userId;
         itemJson["product_id"] = item.productId;
         itemJson["quantity"] = item.quantity;
+        const auto product = productService_.getProduct(item.productId);
+        if (product)
+        {
+            itemJson["name"] = product->name;
+            itemJson["image_url"] = product->imageUrl;
+        }
 
         itemsJson.append(itemJson);
     }
@@ -201,4 +207,4 @@ void CartController::removeItem(
     callback(response);
 }
 
-}
+}

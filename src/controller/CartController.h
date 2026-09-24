@@ -2,6 +2,7 @@
 
 #include "../repository/CartRepository.h"
 #include "../service/CartService.h"
+#include "../service/ProductService.h"
 
 #include <drogon/HttpController.h>
 
@@ -59,6 +60,8 @@ public:
         std::int64_t productId);
 
 private:
+    ProductRepository productRepository_;
+    ProductService productService_{productRepository_};
     CartRepository cartRepository_;
 
     CartService cartService_{
