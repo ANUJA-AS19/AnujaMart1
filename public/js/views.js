@@ -428,8 +428,8 @@ export async function cart(ctx) {
     const minus = el('button', { class: 'btn btn-ghost btn-icon', type: 'button', 'aria-label': `Decrease quantity of ${item.name}` }, '−');
     const plus = el('button', { class: 'btn btn-ghost btn-icon', type: 'button', 'aria-label': `Increase quantity of ${item.name}` }, '+');
     const remove = el('button', { class: 'btn btn-link', type: 'button' }, 'Remove');
-    minus.addEventListener('click', () => run(() => (item.quantity <= 1 ? api.removeCartItem(item.productId) : api.updateCartItem(item.id, item.quantity - 1))));
-    plus.addEventListener('click', () => run(() => api.updateCartItem(item.id, item.quantity + 1)));
+    minus.addEventListener('click', () => run(() => (item.quantity <= 1 ? api.removeCartItem(item.productId) : api.updateCartItem(item.productId, item.quantity - 1))));
+    plus.addEventListener('click', () => run(() => api.updateCartItem(item.productId, item.quantity + 1)));
     remove.addEventListener('click', () => run(() => api.removeCartItem(item.productId)));
     const atMax = item.quantity >= item.stockQty;
     if (atMax) plus.disabled = true;
