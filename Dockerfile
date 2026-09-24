@@ -1,6 +1,7 @@
 FROM ubuntu:24.04 AS build
 ENV DEBIAN_FRONTEND=noninteractive VCPKG_MAX_CONCURRENCY=1 CMAKE_BUILD_PARALLEL_LEVEL=1
 RUN apt-get update && apt-get install -y build-essential cmake ninja-build git curl zip unzip tar pkg-config python3 bison flex autoconf autoconf-archive automake libtool linux-libc-dev && rm -rf /var/lib/apt/lists/*
+RUN command -v autoconf && command -v autoreconf && command -v automake && command -v libtoolize
 RUN git clone https://github.com/microsoft/vcpkg /opt/vcpkg && /opt/vcpkg/bootstrap-vcpkg.sh -disableMetrics
 WORKDIR /app
 COPY vcpkg.json .
