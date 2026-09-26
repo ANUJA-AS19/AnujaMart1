@@ -49,5 +49,5 @@ export const EP = {
 
   // Ops
   health: '/health',                    // GET {status, db}
-  chatbot: '/chatbot',                  // POST (used later for the chatbot widget)
+  chatbot: '/api/v1/chatbot',                  // POST (used later for the chatbot widget)
 };

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../service/ProductBrowseService.h"
+
 #include <drogon/HttpController.h>
 
 namespace anuja::anujamart
@@ -21,6 +23,11 @@ public:
     void chat(
         const drogon::HttpRequestPtr& request,
         std::function<void(const drogon::HttpResponsePtr&)>&& callback);
+
+private:
+    ProductBrowseRepository productBrowseRepository_;
+    ProductBrowseService productBrowseService_{
+        productBrowseRepository_};
 };
 
 }
