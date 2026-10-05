@@ -155,4 +155,11 @@ std::vector<Order> OrderService::getAllOrders(
     return orderRepository_.findAll();
 }
 
+Json::Value OrderService::getOrderItems(
+    std::int64_t orderId,
+    std::int64_t sellerId)
+{
+    return orderRepository_.findItemsJson(orderId, sellerId);
+}
+
 }

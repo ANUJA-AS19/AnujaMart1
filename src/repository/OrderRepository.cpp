@@ -293,4 +293,47 @@ std::vector<Order> OrderRepository::findAll()
     return orders;
 }
 
+Json::Value OrderRepository::findItemsJson(
+    std::int64_t orderId,
+    std::int64_t sellerId)
+{
+    Json::Value items(Json::arrayValue);
+    try
+    {
+        pqxx::connection* connection =
+            Database::instance().connection();
+        pqxx::work transaction(*connection);
+
+        const auto result = transaction.exec_params(
+            R"(
+                SELECT oi.product_id, p.name, p.seller_id,
+                       oi.quantity, oi.unit_price_cents
+                FROM order_items oi
+                INNER JOIN products p ON p.id = oi.product_id
+                WHERE oi.order_id = $1
+                  AND ($2::bigint = 0 OR p.seller_id = $2::bigint)
+                ORDER BY oi.product_id
+            )",
+            orderId,
+            sellerId);
+
+        for (const auto& row : result)
+        {
+            Json::Value it;
+            it["product_id"] = Json::Int64(row["product_id"].as<std::int64_t>());
+            it["name"] = row["name"].as<std::string>();
+            it["seller_id"] = Json::Int64(row["seller_id"].as<std::int64_t>());
+            it["quantity"] = Json::Int64(row["quantity"].as<std::int64_t>());
+            it["unit_price_cents"] = Json::Int64(row["unit_price_cents"].as<std::int64_t>());
+            items.append(it);
+        }
+        transaction.commit();
+    }
+    catch (const std::exception&)
+    {
+        return Json::Value(Json::arrayValue);
+    }
+    return items;
+}
+
 }

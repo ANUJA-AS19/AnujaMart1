@@ -3,6 +3,7 @@
 #include "../model/Order.h"
 
 #include <cstdint>
+#include <json/json.h>
 #include <string>
 #include <vector>
 
@@ -33,5 +34,7 @@ bool updateStatus(
     const std::string& status);
 
     std::vector<Order> findAll();
+
+    Json::Value findItemsJson(std::int64_t orderId, std::int64_t sellerId);
 };
 } // namespace anuja::anujamart

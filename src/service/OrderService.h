@@ -37,6 +37,10 @@ public:
         std::int64_t orderId,
         const std::string& status);
 
+    Json::Value getOrderItems(
+        std::int64_t orderId,
+        std::int64_t sellerId);
+
     std::vector<Order> getAllOrders(
         std::int64_t adminId);
 

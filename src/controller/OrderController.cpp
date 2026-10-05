@@ -84,6 +84,7 @@ void OrderController::getBuyerOrders(
         orderJson["status"] = order.status;
         orderJson["total_amount_cents"] =
             order.totalAmountCents;
+        orderJson["items"] = orderService_.getOrderItems(order.id, 0);
 
         ordersJson.append(orderJson);
     }
@@ -127,6 +128,7 @@ void OrderController::getSellerOrders(
         orderJson["status"] = order.status;
         orderJson["total_amount_cents"] =
             order.totalAmountCents;
+        orderJson["items"] = orderService_.getOrderItems(order.id, sellerId);
 
         ordersJson.append(orderJson);
     }

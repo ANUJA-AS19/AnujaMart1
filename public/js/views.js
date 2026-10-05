@@ -629,7 +629,7 @@ export async function seller(ctx) {
   function stats() {
     const live = data.orders.filter((o) => o.status !== 'CANCELLED');
     const revenue = live.reduce((s, o) => s + myItems(o).reduce((t, i) => t + i.lineTotalCents, 0), 0);
-    const pending = data.orders.filter((o) => o.status === 'PENDING').length;
+    const pending = data.orders.filter((o) => ['PENDING', 'CONFIRMED'].includes(o.status)).length;
     const stat = (label, value) => el('div', { class: 'stat' }, el('dd', {}, value), el('dt', {}, label));
     return el('dl', { class: 'stats' },
       stat('Active listings', String(data.listings.length)),
