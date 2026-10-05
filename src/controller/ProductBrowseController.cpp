@@ -10,7 +10,7 @@ void ProductBrowseController::browseProducts(
     std::function<void(const drogon::HttpResponsePtr&)>&& callback)
 {
     const std::string search =
-        request->getParameter("search");
+        request->getParameter("q");
 
     const std::string category =
         request->getParameter("category");
