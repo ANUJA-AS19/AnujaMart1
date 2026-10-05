@@ -1,4 +1,5 @@
 #include "ProductController.h"
+#include "../util/ApiResponse.h"
 
 #include <json/json.h>
 #include <stdexcept>
@@ -45,7 +46,7 @@ void ProductController::createProduct(
         Json::Value responseJson;
         responseJson["success"] = false;
         responseJson["data"] = Json::nullValue;
-        responseJson["error"] = "Invalid JSON body";
+        responseJson["error"] = makeError("INVALID_JSON", "Invalid JSON body");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(responseJson);
@@ -215,7 +216,7 @@ void ProductController::getProduct(
         Json::Value responseJson;
         responseJson["success"] = false;
         responseJson["data"] = Json::nullValue;
-        responseJson["error"] = "product_id must be a valid number";
+        responseJson["error"] = makeError("INVALID_PRODUCT_ID", "product_id must be a valid number");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(responseJson);
@@ -416,7 +417,7 @@ void ProductController::deleteProduct(
         Json::Value responseJson;
         responseJson["success"] = false;
         responseJson["data"] = Json::nullValue;
-        responseJson["error"] = "product_id must be a valid number";
+        responseJson["error"] = makeError("INVALID_PRODUCT_ID", "product_id must be a valid number");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(responseJson);

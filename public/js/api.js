@@ -287,7 +287,7 @@ export const api = {
   updateProduct: (id, input, sellerId) => request('PUT', EP.product(id), toWireProduct(input, sellerId)),
   deleteProduct: (id, sellerId) => request('DELETE', EP.product(id), undefined, { seller_id: sellerId }),
   setOrderStatus: (orderId, status) =>
-    request('PUT', EP.sellerOrderStatus, { order_id: orderId, status }),
+    request('PUT', EP.sellerOrderStatus, undefined, { order_id: orderId, status }),
 
   // --- cart
   async cart() {

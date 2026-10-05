@@ -1,4 +1,5 @@
 #include "ReviewController.h"
+#include "../util/ApiResponse.h"
 
 #include <json/json.h>
 
@@ -17,7 +18,7 @@ void ReviewController::createReview(
     {
         responseJson["success"] = false;
         responseJson["data"] = Json::nullValue;
-        responseJson["error"] = "Invalid product_id";
+        responseJson["error"] = makeError("INVALID_PRODUCT_ID", "Invalid product_id");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(
@@ -34,7 +35,7 @@ void ReviewController::createReview(
     {
         responseJson["success"] = false;
         responseJson["data"] = Json::nullValue;
-        responseJson["error"] = "JSON body is required";
+        responseJson["error"] = makeError("JSON_BODY_REQUIRED", "JSON body is required");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(
@@ -148,7 +149,7 @@ void ReviewController::getProductReviews(
     {
         responseJson["success"] = false;
         responseJson["data"] = Json::nullValue;
-        responseJson["error"] = "Invalid product_id";
+        responseJson["error"] = makeError("INVALID_PRODUCT_ID", "Invalid product_id");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(
