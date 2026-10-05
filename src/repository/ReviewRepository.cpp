@@ -48,6 +48,40 @@ bool ReviewRepository::createReview(
     }
 }
 
+bool ReviewRepository::hasDeliveredPurchase(
+    std::int64_t userId,
+    std::int64_t productId)
+{
+    auto* db = Database::instance().connection();
+
+    if (db == nullptr || userId <= 0 || productId <= 0)
+        return false;
+
+    try
+    {
+        pqxx::read_transaction transaction(*db);
+
+        const auto result = transaction.exec_params(
+            "SELECT 1 "
+            "FROM orders o "
+            "INNER JOIN order_items oi "
+            "ON oi.order_id = o.id "
+            "WHERE o.buyer_id = $1 "
+            "AND oi.product_id = $2 "
+            "AND o.status = 'DELIVERED' "
+            "LIMIT 1",
+            userId,
+            productId);
+
+        return !result.empty();
+    }
+    catch (const std::exception&)
+    {
+        return false;
+    }
+}
+
+
 std::vector<Review> ReviewRepository::findByProduct(
     std::int64_t productId)
 {

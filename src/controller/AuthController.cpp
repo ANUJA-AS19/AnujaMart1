@@ -1,4 +1,5 @@
 #include "AuthController.h"
+#include "../util/ApiResponse.h"
 
 #include <drogon/drogon.h>
 
@@ -51,7 +52,7 @@ void AuthController::registerUser(
     {
         responseJson["success"] = false;
         responseJson["data"] = Json::nullValue;
-        responseJson["error"] = "Registration failed";
+        responseJson["error"] = makeError("REGISTRATION_FAILED", "Registration failed");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(responseJson);
@@ -103,7 +104,7 @@ void AuthController::login(
     {
         responseJson["success"] = false;
         responseJson["data"] = Json::nullValue;
-        responseJson["error"] = "Invalid email or password";
+        responseJson["error"] = makeError("INVALID_CREDENTIALS", "Invalid email or password");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(responseJson);

@@ -12,3 +12,4 @@ vcpkg_installed/
 frontend/node_modules/
 frontend/dist/
 .vs/
+.env

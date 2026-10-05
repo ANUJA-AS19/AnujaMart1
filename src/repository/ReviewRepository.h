@@ -17,6 +17,10 @@ public:
         int rating,
         const std::string& comment);
 
+    bool hasDeliveredPurchase(
+        std::int64_t userId,
+        std::int64_t productId);
+
     std::vector<Review> findByProduct(
         std::int64_t productId);
 };

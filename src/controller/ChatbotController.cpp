@@ -1,4 +1,5 @@
 #include "ChatbotController.h"
+#include "../util/ApiResponse.h"
 
 #include <json/json.h>
 #include <algorithm>
@@ -24,7 +25,7 @@ void ChatbotController::chat(
     {
         responseJson["success"] = false;
         responseJson["data"] = Json::nullValue;
-        responseJson["error"] = "A string message is required";
+        responseJson["error"] = makeError("INVALID_MESSAGE", "A string message is required");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(responseJson);

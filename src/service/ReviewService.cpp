@@ -23,6 +23,11 @@ bool ReviewService::createReview(
         return false;
     }
 
+    if (reviewRepository_.hasDeliveredPurchase(userId, productId) == false)
+    {
+        return false;
+    }
+
     return reviewRepository_.createReview(
         productId,
         userId,

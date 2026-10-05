@@ -2,7 +2,10 @@
 
 #include "../repository/Database.h"
 
+#include <sodium.h>
 #include <iostream>
+#include <cstdlib>
+#include <cstring>
 #include <pqxx/pqxx>
 
 namespace anuja::anujamart
@@ -189,6 +192,31 @@ void MigrationService::runMigrations()
                 VALUES (1);
             )SQL");
 
+            const char* adminPassword = std::getenv("ANUJAMART_ADMIN_PASSWORD");
+            if (adminPassword != nullptr && adminPassword[0] != '\0')
+            {
+                char adminHash[crypto_pwhash_STRBYTES];
+
+                if (crypto_pwhash_str(
+                        adminHash,
+                        adminPassword,
+                        std::strlen(adminPassword),
+                        crypto_pwhash_OPSLIMIT_INTERACTIVE,
+                        crypto_pwhash_MEMLIMIT_INTERACTIVE) == 0)
+                {
+                    transaction.exec(
+                        "INSERT INTO users "
+                        "(name, email, password_hash, role) "
+                        "VALUES ($1, $2, $3, 'ADMIN') "
+                        "ON CONFLICT (email) DO NOTHING",
+                        pqxx::params{
+                            "AnujaMart Admin",
+                            "admin@anujamart.com",
+                            adminHash
+                        });
+                }
+            }
+
             transaction.commit();
 
             std::cout
@@ -223,6 +251,31 @@ void MigrationService::runMigrations()
                 CREATE INDEX IF NOT EXISTS idx_sessions_user
                     ON sessions(user_id);
             )SQL");
+
+            const char* adminPassword = std::getenv("ANUJAMART_ADMIN_PASSWORD");
+            if (adminPassword != nullptr && adminPassword[0] != '\0')
+            {
+                char adminHash[crypto_pwhash_STRBYTES];
+
+                if (crypto_pwhash_str(
+                        adminHash,
+                        adminPassword,
+                        std::strlen(adminPassword),
+                        crypto_pwhash_OPSLIMIT_INTERACTIVE,
+                        crypto_pwhash_MEMLIMIT_INTERACTIVE) == 0)
+                {
+                    transaction.exec(
+                        "INSERT INTO users "
+                        "(name, email, password_hash, role) "
+                        "VALUES ($1, $2, $3, 'ADMIN') "
+                        "ON CONFLICT (email) DO NOTHING",
+                        pqxx::params{
+                            "AnujaMart Admin",
+                            "admin@anujamart.com",
+                            adminHash
+                        });
+                }
+            }
 
             transaction.commit();
 

@@ -1,4 +1,5 @@
 #include "AdminController.h"
+#include "../util/ApiResponse.h"
 
 #include <json/json.h>
 
@@ -18,7 +19,7 @@ void AdminController::getAllUsers(
         Json::Value json;
         json["success"] = false;
         json["data"] = Json::nullValue;
-        json["error"] = "admin_id is required";
+        json["error"] = makeError("ADMIN_ID_REQUIRED", "admin_id is required");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(json);
@@ -39,7 +40,7 @@ void AdminController::getAllUsers(
         Json::Value json;
         json["success"] = false;
         json["data"] = Json::nullValue;
-        json["error"] = "admin_id must be a valid number";
+        json["error"] = makeError("INVALID_ADMIN_ID", "admin_id must be a valid number");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(json);
@@ -56,7 +57,7 @@ void AdminController::getAllUsers(
         Json::Value json;
         json["success"] = false;
         json["data"] = Json::nullValue;
-        json["error"] = "Access denied. Admin role required";
+        json["error"] = makeError("ADMIN_REQUIRED", "Access denied. Admin role required");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(json);
@@ -112,7 +113,7 @@ void AdminController::getAllOrders(
         Json::Value json;
         json["success"] = false;
         json["data"] = Json::nullValue;
-        json["error"] = "admin_id is required";
+        json["error"] = makeError("ADMIN_ID_REQUIRED", "admin_id is required");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(json);
@@ -133,7 +134,7 @@ void AdminController::getAllOrders(
         Json::Value json;
         json["success"] = false;
         json["data"] = Json::nullValue;
-        json["error"] = "admin_id must be a valid number";
+        json["error"] = makeError("INVALID_ADMIN_ID", "admin_id must be a valid number");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(json);
@@ -150,7 +151,7 @@ void AdminController::getAllOrders(
         Json::Value json;
         json["success"] = false;
         json["data"] = Json::nullValue;
-        json["error"] = "Access denied. Admin role required";
+        json["error"] = makeError("ADMIN_REQUIRED", "Access denied. Admin role required");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(json);
@@ -204,7 +205,7 @@ void AdminController::deleteProduct(
         Json::Value json;
         json["success"] = false;
         json["data"] = Json::nullValue;
-        json["error"] = "admin_id is required";
+        json["error"] = makeError("ADMIN_ID_REQUIRED", "admin_id is required");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(json);
@@ -225,7 +226,7 @@ void AdminController::deleteProduct(
         Json::Value json;
         json["success"] = false;
         json["data"] = Json::nullValue;
-        json["error"] = "admin_id must be a valid number";
+        json["error"] = makeError("INVALID_ADMIN_ID", "admin_id must be a valid number");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(json);
@@ -240,7 +241,7 @@ void AdminController::deleteProduct(
         Json::Value json;
         json["success"] = false;
         json["data"] = Json::nullValue;
-        json["error"] = "product_id must be a valid number";
+        json["error"] = makeError("INVALID_PRODUCT_ID", "product_id must be a valid number");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(json);
@@ -257,7 +258,7 @@ void AdminController::deleteProduct(
         Json::Value json;
         json["success"] = false;
         json["data"] = Json::nullValue;
-        json["error"] = "Access denied. Admin role required";
+        json["error"] = makeError("ADMIN_REQUIRED", "Access denied. Admin role required");
 
         auto response =
             drogon::HttpResponse::newHttpJsonResponse(json);
@@ -282,7 +283,7 @@ void AdminController::deleteProduct(
     }
     else
     {
-        json["error"] = "Product not found or already deleted";
+        json["error"] = makeError("PRODUCT_NOT_FOUND", "Product not found or already deleted");
     }
 
     auto response =
