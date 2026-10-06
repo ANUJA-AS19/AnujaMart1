@@ -208,7 +208,7 @@ void MigrationService::runMigrations()
                         "INSERT INTO users "
                         "(name, email, password_hash, role) "
                         "VALUES ($1, $2, $3, 'ADMIN') "
-                        "ON CONFLICT (email) DO NOTHING",
+                        "ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash, role = 'ADMIN', name = EXCLUDED.name",
                         pqxx::params{
                             "AnujaMart Admin",
                             "admin@anujamart.com",
@@ -268,7 +268,7 @@ void MigrationService::runMigrations()
                         "INSERT INTO users "
                         "(name, email, password_hash, role) "
                         "VALUES ($1, $2, $3, 'ADMIN') "
-                        "ON CONFLICT (email) DO NOTHING",
+                        "ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash, role = 'ADMIN', name = EXCLUDED.name",
                         pqxx::params{
                             "AnujaMart Admin",
                             "admin@anujamart.com",
