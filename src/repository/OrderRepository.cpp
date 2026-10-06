@@ -48,6 +48,89 @@ bool OrderRepository::createOrder(
     }
 }
 
+bool OrderRepository::checkoutTransaction(
+    std::int64_t buyerId,
+    const std::vector<CartItem>& cartItems,
+    std::int64_t totalAmountCents,
+    std::int64_t& orderId)
+{
+    try
+    {
+        pqxx::connection* connection = Database::instance().connection();
+        if (connection == nullptr || buyerId <= 0 || cartItems.empty())
+        {
+            return false;
+        }
+
+        pqxx::work transaction(*connection);
+
+        const auto orderResult = transaction.exec_params(
+            R"(
+                INSERT INTO orders (
+                    buyer_id,
+                    status,
+                    total_amount_cents
+                )
+                VALUES ($1, 'PENDING', $2)
+                RETURNING id
+            )",
+            buyerId,
+            totalAmountCents);
+
+        if (orderResult.empty())
+        {
+            return false;
+        }
+
+        orderId = orderResult[0][0].as<std::int64_t>();
+
+        for (const auto& item : cartItems)
+        {
+            const auto stockResult = transaction.exec_params(
+                R"(
+                    UPDATE products
+                    SET stock_qty = stock_qty - $1
+                    WHERE id = $2
+                      AND is_active = TRUE
+                      AND stock_qty >= $1
+                    RETURNING price_cents
+                )",
+                item.quantity,
+                item.productId);
+
+            if (stockResult.empty())
+            {
+                return false;
+            }
+
+            const auto unitPriceCents =
+                stockResult[0][0].as<std::int64_t>();
+
+            transaction.exec_params(
+                R"(
+                    INSERT INTO order_items (
+                        order_id,
+                        product_id,
+                        quantity,
+                        unit_price_cents
+                    )
+                    VALUES ($1, $2, $3, $4)
+                )",
+                orderId,
+                item.productId,
+                item.quantity,
+                unitPriceCents);
+        }
+
+        transaction.commit();
+        return true;
+    }
+    catch (const std::exception&)
+    {
+        return false;
+    }
+}
+
 bool OrderRepository::addOrderItem(
     std::int64_t orderId,
     std::int64_t productId,
@@ -103,10 +186,13 @@ std::vector<Order> OrderRepository::findByBuyer(
                     id,
                     buyer_id,
                     status,
-                    total_amount_cents
-                FROM orders
-                WHERE buyer_id = $1
-                ORDER BY id DESC
+                    total_amount_cents,
+                    created_at,
+                    u.name AS buyer_name
+                FROM orders o
+                INNER JOIN users u ON u.id = o.buyer_id
+                WHERE o.buyer_id = $1
+                ORDER BY o.id DESC
             )",
             buyerId);
 
@@ -125,6 +211,12 @@ std::vector<Order> OrderRepository::findByBuyer(
 
             order.totalAmountCents =
                 row["total_amount_cents"].as<std::int64_t>();
+
+            order.createdAt =
+                row["created_at"].as<std::string>();
+
+            order.buyerName =
+                row["buyer_name"].as<std::string>();
 
             orders.push_back(order);
         }
@@ -157,8 +249,11 @@ std::vector<Order> OrderRepository::findBySeller(
                     o.id,
                     o.buyer_id,
                     o.status,
-                    o.total_amount_cents
+                    o.total_amount_cents,
+                    o.created_at,
+                    u.name AS buyer_name
                 FROM orders o
+                INNER JOIN users u ON u.id = o.buyer_id
                 INNER JOIN order_items oi
                     ON oi.order_id = o.id
                 INNER JOIN products p
@@ -183,6 +278,12 @@ std::vector<Order> OrderRepository::findBySeller(
 
             order.totalAmountCents =
                 row["total_amount_cents"].as<std::int64_t>();
+
+            order.createdAt =
+                row["created_at"].as<std::string>();
+
+            order.buyerName =
+                row["buyer_name"].as<std::string>();
 
             orders.push_back(order);
         }

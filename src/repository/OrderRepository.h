@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../model/Order.h"
+#include "../model/CartItem.h"
 
 #include <cstdint>
 #include <json/json.h>
@@ -17,6 +18,11 @@ public:
         std::int64_t totalAmountCents,
         std::int64_t& orderId);
 
+    bool checkoutTransaction(
+        std::int64_t buyerId,
+        const std::vector<CartItem>& cartItems,
+        std::int64_t totalAmountCents,
+        std::int64_t& orderId);
     bool addOrderItem(
         std::int64_t orderId,
         std::int64_t productId,

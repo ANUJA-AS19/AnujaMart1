@@ -53,8 +53,9 @@ bool OrderService::checkout(
             item.quantity * product->priceCents;
     }
 
-    if (!orderRepository_.createOrder(
+    if (!orderRepository_.checkoutTransaction(
             buyerId,
+            cartItems,
             totalAmountCents,
             orderId))
     {
@@ -63,36 +64,12 @@ bool OrderService::checkout(
 
     for (const auto& item : cartItems)
     {
-        const auto product =
-            productRepository_.findById(item.productId);
-
-        if (!product.has_value())
+        if (!cartRepository_.removeItem(
+                buyerId,
+                item.productId))
         {
             return false;
         }
-
-        if (!orderRepository_.addOrderItem(
-                orderId,
-                item.productId,
-                item.quantity,
-                product->priceCents))
-        {
-            return false;
-        }
-
-        if (!productRepository_.decreaseStock(
-                item.productId,
-                item.quantity))
-        {
-            return false;
-        }
-    }
-
-    for (const auto& item : cartItems)
-    {
-        cartRepository_.removeItem(
-            buyerId,
-            item.productId);
     }
 
     return true;
