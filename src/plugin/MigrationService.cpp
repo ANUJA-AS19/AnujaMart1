@@ -253,6 +253,7 @@ void MigrationService::runMigrations()
             )SQL");
 
             const char* adminPassword = std::getenv("ANUJAMART_ADMIN_PASSWORD");
+                std::cerr << "ADMIN SEED PASSWORD: " << ((adminPassword != nullptr && adminPassword[0] != '0') ? "SET" : "NOT SET") << std::endl;
             if (adminPassword != nullptr && adminPassword[0] != '\0')
             {
                 char adminHash[crypto_pwhash_STRBYTES];
