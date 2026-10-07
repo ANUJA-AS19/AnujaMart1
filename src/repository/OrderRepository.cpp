@@ -2,6 +2,7 @@
 #include "Database.h"
 
 #include <pqxx/pqxx>
+#include <iostream>
 
 namespace anuja::anujamart
 {
@@ -125,7 +126,7 @@ bool OrderRepository::checkoutTransaction(
         transaction.commit();
         return true;
     }
-    catch (const std::exception&)
+    catch (const std::exception& e)
     {
         return false;
     }
@@ -223,9 +224,9 @@ std::vector<Order> OrderRepository::findByBuyer(
 
         transaction.commit();
     }
-    catch (const std::exception&)
+    catch (const std::exception& e)
     {
-        return {};
+        std::cerr << "findByBuyer failed: " << e.what() << std::endl; return {};
     }
 
     return orders;
