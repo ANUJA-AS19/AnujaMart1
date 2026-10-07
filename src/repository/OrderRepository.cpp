@@ -184,11 +184,11 @@ std::vector<Order> OrderRepository::findByBuyer(
         const auto result = transaction.exec_params(
             R"(
                 SELECT
-                    id,
-                    buyer_id,
-                    status,
-                    total_amount_cents,
-                    created_at,
+                    o.id,
+                    o.buyer_id,
+                    o.status,
+                    o.total_amount_cents,
+                    o.created_at,
                     u.name AS buyer_name
                 FROM orders o
                 INNER JOIN users u ON u.id = o.buyer_id
