@@ -13,3 +13,10 @@ frontend/node_modules/
 frontend/dist/
 .vs/
 .env
+
+config.json
+*.bak
+*.backup*
+*.before_role_fix
+build_output.txt
+chatbot.txt
