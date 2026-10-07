@@ -358,12 +358,15 @@ std::vector<Order> OrderRepository::findAll()
         const auto result = transaction.exec(
             R"(
                 SELECT
-                    id,
-                    buyer_id,
-                    status,
-                    total_amount_cents
-                FROM orders
-                ORDER BY id DESC
+                    o.id,
+                    o.buyer_id,
+                    o.status,
+                    o.total_amount_cents,
+                    o.created_at,
+                    u.name AS buyer_name
+                FROM orders o
+                INNER JOIN users u ON u.id = o.buyer_id
+                ORDER BY o.id DESC
             )");
 
         for (const auto& row : result)
@@ -381,6 +384,12 @@ std::vector<Order> OrderRepository::findAll()
 
             order.totalAmountCents =
                 row["total_amount_cents"].as<std::int64_t>();
+
+            order.createdAt =
+                row["created_at"].as<std::string>();
+
+            order.buyerName =
+                row["buyer_name"].as<std::string>();
 
             orders.push_back(order);
         }

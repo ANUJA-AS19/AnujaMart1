@@ -174,6 +174,8 @@ void AdminController::getAllOrders(
         item["status"] = order.status;
         item["total_amount_cents"] =
             Json::Int64(order.totalAmountCents);
+        item["buyer_name"] = order.buyerName;
+        item["created_at"] = order.createdAt;
 
         ordersJson.append(item);
     }
