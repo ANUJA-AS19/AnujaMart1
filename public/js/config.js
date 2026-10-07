@@ -39,7 +39,7 @@ export const EP = {
   cartItem: (id) => `/cart/items/${id}`,// PUT {quantity} | DELETE
 
   // Orders
-  orders: '/api/v1/orders',                    // GET buyer history
+  orders: '/orders',                    // GET buyer history
   checkout: '/orders/checkout',         // POST place order (mock payment)
 
   // Admin
