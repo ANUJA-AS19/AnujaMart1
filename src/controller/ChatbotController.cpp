@@ -8,6 +8,41 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <chrono>
+#include <cstddef>
+#include <deque>
+#include <mutex>
+#include <unordered_map>
+
+namespace
+{
+constexpr std::size_t kMaxMessageLength = 500;
+constexpr std::size_t kMaxMessagesPerMinute = 10;
+
+/** Returns false when this client has sent 10 messages in the last minute. */
+bool AllowChatMessage(const std::string& key)
+{
+    static std::mutex mutex;
+    static std::unordered_map<
+        std::string,
+        std::deque<std::chrono::steady_clock::time_point>> hits;
+
+    const auto now = std::chrono::steady_clock::now();
+    std::lock_guard<std::mutex> lock(mutex);
+    auto& queue = hits[key];
+    while (!queue.empty() &&
+           now - queue.front() > std::chrono::minutes(1))
+    {
+        queue.pop_front();
+    }
+    if (queue.size() >= kMaxMessagesPerMinute)
+    {
+        return false;
+    }
+    queue.push_back(now);
+    return true;
+}
+}
 
 namespace anuja::anujamart
 {
@@ -36,6 +71,31 @@ void ChatbotController::chat(
     }
 
     std::string message = (*json)["message"].asString();
+
+    if (message.size() > kMaxMessageLength)
+    {
+        responseJson["success"] = false;
+        responseJson["data"] = Json::nullValue;
+        responseJson["error"] = makeError("MESSAGE_TOO_LONG", "Message must be 500 characters or fewer");
+        auto tooLong = drogon::HttpResponse::newHttpJsonResponse(responseJson);
+        tooLong->setStatusCode(drogon::k400BadRequest);
+        callback(tooLong);
+        return;
+    }
+
+    const std::string limitKey = request->session()
+        ? request->session()->sessionId()
+        : request->peerAddr().toIp();
+    if (!AllowChatMessage(limitKey))
+    {
+        responseJson["success"] = false;
+        responseJson["data"] = Json::nullValue;
+        responseJson["error"] = makeError("RATE_LIMITED", "Too many messages. Please wait a minute.");
+        auto limited = drogon::HttpResponse::newHttpJsonResponse(responseJson);
+        limited->setStatusCode(drogon::k429TooManyRequests);
+        callback(limited);
+        return;
+    }
 
     // Convert the user's message to lowercase.
     std::string searchText = message;
