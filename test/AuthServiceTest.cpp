@@ -1,6 +1,5 @@
 #include "../src/service/AuthService.h"
 #include <gtest/gtest.h>
-
 using namespace anuja::anujamart;
 
 TEST(AuthServiceTest, RejectsEmptyRegistrationFields) {
