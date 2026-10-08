@@ -1,0 +1,59 @@
+name: AnujaMart CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-24.04
+    env:
+      VCPKG_MAX_CONCURRENCY: 1
+      CMAKE_BUILD_PARALLEL_LEVEL: 1
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build git curl zip unzip tar pkg-config python3 bison flex autoconf autoconf-archive automake libtool linux-libc-dev
+
+      - name: Set up vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg "$VCPKG_ROOT"
+          "$VCPKG_ROOT/bootstrap-vcpkg.sh" -disableMetrics
+
+      - name: Prepare Linux release triplet
+        run: |
+          mkdir -p "$RUNNER_TEMP/triplets"
+          cp "$VCPKG_ROOT/triplets/x64-linux.cmake" "$RUNNER_TEMP/triplets/x64-linux-release.cmake"
+          echo "set(VCPKG_BUILD_TYPE release)" >> "$RUNNER_TEMP/triplets/x64-linux-release.cmake"
+
+      - name: Install project dependencies
+        run: |
+          "$VCPKG_ROOT/vcpkg" install \
+            --triplet x64-linux-release \
+            --overlay-triplets="$RUNNER_TEMP/triplets" \
+            --x-install-root="$VCPKG_ROOT/installed"
+
+      - name: Configure CMake
+        run: |
+          cmake -S . -B build-ci -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" \
+            -DVCPKG_TARGET_TRIPLET=x64-linux-release \
+            -DVCPKG_OVERLAY_TRIPLETS="$RUNNER_TEMP/triplets" \
+            -DVCPKG_MANIFEST_MODE=OFF \
+            -DCMAKE_PREFIX_PATH="$VCPKG_ROOT/installed/x64-linux-release" \
+            -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build AnujaMart
+        run: cmake --build build-ci --parallel 1
+
+      - name: Run automated tests
+        run: ctest --test-dir build-ci --output-on-failure
