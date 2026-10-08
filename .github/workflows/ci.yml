@@ -1,5 +1,4 @@
 name: AnujaMart CI
-
 on:
   push:
     branches: [main]
