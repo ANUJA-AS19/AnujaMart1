@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../model/User.h"
 
 #include <cstdint>
